@@ -7,28 +7,24 @@
 (defn fuel-required [mass]
   (- (floor (/ mass 3)) 2))
 
-(defn total-fuel-required [masses]
-  (sum (map fuel-required masses)))
-
 (defn fuel-required-recursive [mass]
   (if (< mass 9)
     (return 0)
     (do
       (setv fuel (fuel-required mass))
-      ;(print (+ "fuel: " (str fuel)))
       (return (+ fuel (fuel-required-recursive fuel))))))
 
-(defn read-masses []
+(defn read-input []
   (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
   (with [f (open filename)]
     (list (map (fn [x] (-> x (.strip) (int))) (.readlines f)))))
 
 (defn part-1 []
-  (setv masses (read-masses))
+  (setv masses (read-input))
   (sum (map fuel-required masses)))
 
 (defn part-2 []
-  (setv masses (read-masses))
+  (setv masses (read-input))
   (sum (map fuel-required-recursive masses)))
 
 (defmain []

@@ -2,17 +2,22 @@
 
 (import [.main [*]])
 
-(print "hello")
 
-(defn test-fuel-required []
-  (assert (= (fuel-required 12) 2))
-  (assert (= (fuel-required 14) 2))
-  (assert (= (fuel-required 1969) 654))
-  (assert (= (fuel-required 100756) 33583)))
+(with-decorator (pytest.mark.parametrize
+  "mass, expected"
+  [[12 2]
+   [14 2]
+   [1969 654]
+   [100756 33583]])
+  (defn test-fuel-required [mass expected]
+    (assert (= (fuel-required mass) expected))))
 
-(defn test-fuel-required-recursive []
-  (assert (= (fuel-required-recursive 1969) 966))
-  (assert (= (fuel-required-recursive 100756) 50346)))
+(with-decorator (pytest.mark.parametrize
+  "mass, expected"
+  [[1969 966]
+   [100756 50346]])
+  (defn test-fuel-required-recursive [mass expected]
+    (assert (= (fuel-required-recursive mass) expected))))
 
 (defn test-part-1 []
   (assert (= (part-1) 3432671)))
