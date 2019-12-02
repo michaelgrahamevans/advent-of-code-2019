@@ -18,13 +18,19 @@
       ;(print (+ "fuel: " (str fuel)))
       (return (+ fuel (fuel-required-recursive fuel))))))
 
-(defmain []
+(defn read-masses []
   (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
   (with [f (open filename)]
-    (setv part-1 0 part-2 0)
-    (for [line (.readlines f)]
-      (setv mass (int (.strip line)))
-      (+= part-1 (fuel-required mass))
-      (+= part-2 (fuel-required-recursive mass)))
-    (print "Part 1:" part-1)
-    (print "Part 2:" part-2)))
+    (list (map (fn [x] (-> x (.strip) (int))) (.readlines f)))))
+
+(defn part-1 []
+  (setv masses (read-masses))
+  (sum (map fuel-required masses)))
+
+(defn part-2 []
+  (setv masses (read-masses))
+  (sum (map fuel-required-recursive masses)))
+
+(defmain []
+    (print "Part 1:" (part-1))
+    (print "Part 2:" (part-2)))
