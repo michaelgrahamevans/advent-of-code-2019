@@ -1,6 +1,7 @@
 #!/usr/bin/env hy
 
 (import [math [floor]])
+(import os)
 
 
 (defn fuel-required [mass]
@@ -17,18 +18,9 @@
       ;(print (+ "fuel: " (str fuel)))
       (return (+ fuel (fuel-required-recursive fuel))))))
 
-;; Test cases
-;; Part 1
-(assert (= (fuel-required 12) 2))
-(assert (= (fuel-required 14) 2))
-(assert (= (fuel-required 1969) 654))
-(assert (= (fuel-required 100756) 33583))
-;; Part 2
-(assert (= (fuel-required-recursive 1969) 966))
-(assert (= (fuel-required-recursive 100756) 50346))
-
 (defmain []
-  (with [f (open "data.txt")]
+  (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
+  (with [f (open filename)]
     (setv part-1 0 part-2 0)
     (for [line (.readlines f)]
       (setv mass (int (.strip line)))
