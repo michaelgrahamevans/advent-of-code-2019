@@ -28,16 +28,22 @@
   (setv (get mem 2) verb)
   (get (intcode mem) 0))
 
-(defmain []
+(defn read-input []
   (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
   (with [f (open filename)]
-    (setv mem (list (map (fn [x] (int (x.strip))) (.split (.read f) ","))))
+    (list (map (fn [x] (int (x.strip))) (.split (.read f) ",")))))
 
-    (print "Part 1:" (run (deepcopy mem) 12 2))
+(defn part-1 []
+  (run (read-input) 12 2))
 
-    (for [noun (range 100)]
-      (for [verb (range 100)]
-        (setv part-2 (run (deepcopy mem) noun verb))
-        ;(print part-2)
-        (if (= part-2 19690720)
-          (print "Part 2:" (+ (* 100 noun) verb)))))))
+(defn part-2 []
+  (setv mem (read-input))
+  (for [noun (range 100)]
+    (for [verb (range 100)]
+      (if (= (run (deepcopy mem) noun verb) 19690720)
+        (return (+ (* 100 noun) verb))))))
+
+(defmain []
+    (setv mem (read-input))
+    (print "Part 1:" (part-1))
+    (print "Part 2:" (part-2)))
