@@ -1,4 +1,4 @@
-(import [.main [*]])
+(import [aoc.day_3 [*]])
 
 (import pytest)
 

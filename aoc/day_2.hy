@@ -3,6 +3,8 @@
 (import [copy [deepcopy]])
 (import os)
 
+(import [.common [data-file]])
+
 
 (defn intcode [mem]
   "Interprets the provided Intcode program."
@@ -29,8 +31,7 @@
   (get (intcode mem) 0))
 
 (defn read-input []
-  (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
-  (with [f (open filename)]
+  (with [f (open (data-file 2))]
     (list (map (fn [x] (int (x.strip))) (.split (.read f) ",")))))
 
 (defn part-1 []

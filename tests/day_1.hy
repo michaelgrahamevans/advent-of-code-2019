@@ -1,6 +1,6 @@
 (import pytest)
 
-(import [.main [*]])
+(import [aoc.day_1 [*]])
 
 
 (with-decorator (pytest.mark.parametrize

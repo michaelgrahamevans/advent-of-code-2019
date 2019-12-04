@@ -3,6 +3,8 @@
 (import [math [floor]])
 (import os)
 
+(import [.common [data-file]])
+
 
 (defn fuel-required [mass]
   (- (floor (/ mass 3)) 2))
@@ -15,8 +17,7 @@
       (return (+ fuel (fuel-required-recursive fuel))))))
 
 (defn read-input []
-  (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
-  (with [f (open filename)]
+  (with [f (open (data-file 1))]
     (list (map (fn [x] (-> x (.strip) (int))) (.readlines f)))))
 
 (defn part-1 []

@@ -1,12 +1,12 @@
+#!/usr/bin/env hy
+
 (import os)
 
+(import [.common [data-file]])
 
-(defn parse-path [path]
-  )
-  
+
 (defn read-input []
-  (setv filename (os.path.join (os.path.dirname __file__) "data.txt"))
-  (with [f (open filename)]
+  (with [f (open (data-file 3))]
     (setv one (.readline f))
     (setv two (.readline f))
     (, one two)))
