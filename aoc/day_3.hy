@@ -79,11 +79,14 @@
   "Returns the manahattan distance from (, 0 0) to the given coordinate"
   (+ (abs (get coord 0)) (abs (get coord 1))))
 
-(defn part-1 [one two]
+(defn min-intersection [one two]
   (->> (intersections one two) (filter None) (map man-dist) (filter None) (min)))
 
-(defmain []
+(defn part-1 []
   (setv paths (read-input))
   (setv one (get paths 0))
   (setv two (get paths 1))
-  (print "Part 1:" (part-1 one two)))
+  (min-intersection one two))
+
+(defmain []
+  (print "Part 1:" (part-1)))
