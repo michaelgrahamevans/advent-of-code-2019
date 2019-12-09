@@ -36,4 +36,4 @@
   (print "Part 1:" (part-1))
   (print "Part 2:")
   (for [row (part-2)]
-    (print (.replace (.join "" row) "1" "\x1b[34m1\x1b[0m"))))
+    (print (-> (.join "" row) (.replace "0" " ") (.replace "1" "#")))))
