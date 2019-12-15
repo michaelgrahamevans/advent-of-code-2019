@@ -1,4 +1,5 @@
 (import [copy [deepcopy]])
+(import math)
 (import re)
 
 (import [.common [*]])
@@ -68,28 +69,45 @@
     (update-velocity moons))
   moons)
 
+(defn snapshot-axis [moons axis]
+  (tuple (gfor moon moons (, (get moon axis) (get moon (+ "v" axis))))))
+
 (defn part-1 []
   (-> (read-input) (simulate 1000) (total-energy)))
 
 (defn part-2 []
+  (setv res {"x" 0 "y" 0 "z" 0})
+  (setv seen {"x" {} "y" {} "z" {}})
+
   (setv initial (tuple (read-input)))
-  ;(setv initial (tuple (parse-positions "<x=-1, y=0, z=2>\n<x=2, y=-10, z=-7>\n<x=4, y=-8, z=8>\n<x=3, y=5, z=-1>")))
-  (setv seen-states (set [(tuple (gfor x initial (tuple (.values x))))]))
-  ;(print-moons initial)
   (setv new (deepcopy initial))
+
   (setv steps 0)
-  (setv max-x 0)
+
+  (for [axis ["x" "y" "z"]]
+    (setv snapshot (snapshot-axis new axis))
+    (assoc (get seen axis) snapshot steps))
+
   (while True
+    (when (and (get res "x") (get res "y") (get res "z"))
+      (break))
     (+= steps 1)
     (setv new (simulate new 1))
-    (print-moons new)
-    (setv max-x (max max-x (get "x" (get new 0))))
-    (print max-x)
-    (setv new-values (tuple (gfor x new (tuple (.values x)))))
-    (when (in new-values seen-states)
-      (return steps))
-    (.add seen-states new-values)))
+    (for [axis ["x" "y" "z"]]
+      (setv snapshot (snapshot-axis new axis))
+      (when (in snapshot (get seen axis))
+        (when (= (get res axis) 0)
+          (assoc res axis steps)))
+      (assoc (get seen axis) snapshot steps)))
+
+  (lcm (get res "x") (get res "y") (get res "z")))
+
+(defn lcm [&rest args]
+  (if (= (len args) 2)
+    (return (int (/ (* (get args 0) (get args 1))
+                 (math.gcd (get args 0) (get args 1)))))
+    (return (lcm (get args 0) (lcm #*(cut args 1))))))
 
 (defmain []
-  (print "Part 1:" (part-1)))
-  ;(print "Part 2:" (part-2)))
+  (print "Part 1:" (part-1))
+  (print "Part 2:" (part-2)))

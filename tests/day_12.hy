@@ -15,3 +15,6 @@
 
 (defn test-part-1 []
   (assert (= (part-1) 7636)))
+
+(defn test-part-2 []
+  (assert (= (part-2) 281691380235984)))
