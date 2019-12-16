@@ -26,7 +26,7 @@
     (setv interpreter (Intcode prog :inputs [10]))
     (setv result (last interpreter))
     (assert (= result expected))
-    (assert (= interpreter.mem out-mem))))
+    (assert (= (cut interpreter.mem 0 6) out-mem))))
 
 #@((pytest.mark.parametrize
     "program, settings, expected"

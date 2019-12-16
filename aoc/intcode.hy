@@ -7,8 +7,12 @@
 (defclass Intcode []
   (defn --init-- [self prog &optional [pc 0] [inputs None]]
     (setv self.pc pc)
-    (setv self.mem (tokenize prog))
+    (setv self.mem (lfor _ (range 10000) 0))
+    (setv tokens (tokenize prog))
+    (for [i (range (len tokens))]
+      (assoc self.mem i (get tokens i)))
     (setv self.inputs (Queue))
+    (setv self.rel_base 0)
     (for [input (or inputs [])]
       (.put self.inputs input)))
 
@@ -37,10 +41,14 @@
     (setv x (get self.mem (+ self.pc pos)))
     (cond [(= (self.mode pos) 0) (return (get self.mem x))]
           [(= (self.mode pos) 1) (return x)]
+          [(= (self.mode pos) 2) (return (get self.mem (+ x self.rel_base)))]
           [True (print "Unknown mode" (self.mode pos))]))
 
   (defn res-ptr [self]
-    (return (get self.mem (+ self.pc 3))))
+    (cond [(in (self.mode 3) [0 1])
+           (return (get self.mem (+ self.pc 3)))]
+          [(= (self.mode 3) 2)
+           (return (+ self.rel_base (get self.mem (+ self.pc 3))))]))
 
   (defn advance [self pos]
     (+= self.pc pos))
@@ -69,11 +77,15 @@
         ;; read input
         (setv input (.get self.inputs))
         ;(print "read" input)
-        (assoc self.mem (get self.mem (+ self.pc 1)) input)
+        (cond
+          [(in (self.mode 1) [0 1])
+            (assoc self.mem (get self.mem (+ self.pc 1)) input)]
+          [(= (self.mode 1) 2)
+            (assoc self.mem (+ (get self.mem (+ self.pc 1)) self.rel_base) input)])
         (self.advance 2)]
       [(= self.op 4)
         ;; write output
-        ;(print "write" (self.arg 1))
+        (print "write" (self.arg 1))
         (setv res (self.arg 1))
         (self.advance 2)
         (return res)]
@@ -103,6 +115,10 @@
           (assoc self.mem (self.res-ptr) 1)
           (assoc self.mem (self.res-ptr) 0))
         (self.advance 4)]
+      [(= self.op 9)
+        ;; change relative base
+        (+= self.rel_base (self.arg 1))
+        (self.advance 2)]
       [(= self.op 99)
        ;; halt
        (return)]
