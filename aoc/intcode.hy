@@ -85,7 +85,7 @@
         (self.advance 2)]
       [(= self.op 4)
         ;; write output
-        (print "write" (self.arg 1))
+        ;;(print "write" (self.arg 1))
         (setv res (self.arg 1))
         (self.advance 2)
         (return res)]
@@ -125,5 +125,8 @@
       [True
        (print "Invalid opcode " self.op)]))
 
-  (defn add-input [self input]
+  (defn read [self]
+    (return (next self)))
+
+  (defn write [self input]
     (.put self.inputs input)))

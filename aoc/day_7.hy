@@ -12,8 +12,8 @@
   (setv input 0)
   (for [phase settings]
     (setv interpreter (Intcode program))
-    (.add-input interpreter phase)
-    (.add-input interpreter input)
+    (.write interpreter phase)
+    (.write interpreter input)
     (setv input (last interpreter)))
   (return input))
 
@@ -25,7 +25,7 @@
   (for [x (range 5)]
     (.append interpreters (Intcode program :inputs [(get settings x)])))
 
-  (.add-input (get interpreters 0) 0)
+  (.write (get interpreters 0) 0)
 
   (while True
     (for [stage (range 5)]
@@ -34,7 +34,7 @@
         (setv input (next interpreter))
         (except [StopIteration]
           (return input)))
-      (.add-input (get interpreters (% (+ stage 1) 5)) input)))
+      (.write (get interpreters (% (+ stage 1) 5)) input)))
   (return input))
 
 (defn part-1 []
